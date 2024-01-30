@@ -1,9 +1,12 @@
-import { connectToDatabase } from "@utils/database";
-import Prompt from "@models/prompt";
+import { retrievePrismaClient } from "@utils/PrismaClient";
 export const GET = async (req: Request) => {
   try {
-    await connectToDatabase();
-    const prompts = await Prompt.find({}).populate("creator");
+    const prismaClient = retrievePrismaClient();
+    const prompts = await prismaClient.prompt.findMany({
+      include: {
+        creator: true,
+      },
+    });
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (e) {
     console.error(e);

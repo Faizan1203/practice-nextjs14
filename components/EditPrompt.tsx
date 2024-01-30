@@ -1,10 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Form from "@components/Form";
 
-const EditPrompt = () => {
+const HandleEdit = () => {
   const promptId = useSearchParams().get("id");
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -21,15 +20,15 @@ const EditPrompt = () => {
         prompt: data.prompt,
         tag: data.tag,
       });
-    }
-    if(promptId) {
+    };
+    if (promptId) {
       getPromptDetails();
     }
-  },[promptId])
-  const updatePrompt = async (e) => {
+  }, [promptId]);
+  const updatePrompt = async (e: Event) => {
     e.preventDefault();
     setSubmitting(true);
-    if(!promptId) {
+    if (!promptId) {
       return alert("Prompt not found");
     }
     try {
@@ -50,6 +49,13 @@ const EditPrompt = () => {
     }
   };
   return (
+    // <EditPrompt
+    //   post={post}
+    //   setPost={setPost}
+    //   submitting={submitting}
+    //   updatePrompt={updatePrompt}
+    // />
+
     <Form
       type="Edit"
       post={post}
@@ -60,4 +66,4 @@ const EditPrompt = () => {
   );
 };
 
-export default EditPrompt;
+export default HandleEdit;

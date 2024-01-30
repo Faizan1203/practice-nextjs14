@@ -20,16 +20,20 @@ const Profile = (profileProps: ProfileProps) => {
       </h1>
       <p className="desc text-left">{profileProps.desc}</p>
       <div className="mt-16 prompt_layout">
-      {profileProps.data.map((post: Post) => (
+        {profileProps.data.map((post: Post) => (
           <PromptCard
             key={post.id}
             post={post}
-            handleEdit={()=> profileProps.handleEdit && profileProps.handleEdit(post)}
-            handleDelete={()=> profileProps.handleDelete && profileProps.handleDelete(post)}
-            handleTagClick={()=>{}}
+            handleEdit={() =>
+              profileProps.handleEdit && profileProps.handleEdit(post)
+            }
+            handleDelete={() =>
+              profileProps.handleDelete && profileProps.handleDelete(post)
+            }
+            handleTagClick={() => {}}
           />
-      ))}
-    </div>
+        ))}
+      </div>
     </section>
   );
 };

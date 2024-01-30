@@ -1,11 +1,14 @@
-import { connectToDatabase } from "@utils/database";
-import Prompt from "@models/prompt";
+import { retrievePrismaClient } from "@utils/PrismaClient";
 
 export const GET = async (req: Request, { params }: { params: any }) => {
   try {
-    await connectToDatabase();
-    const prompts = await Prompt.findById(params.id).populate("creator");
-    if (!prompts) return new Response("Prompt not found", { status: 404 });
+    const prismaClient = retrievePrismaClient();
+    const prompts = prismaClient.prompt.findMany({
+      where: {
+        creatorId: params.id,
+      },
+    });
+    if (!prompts) return new Response("Prompts not found", { status: 404 });
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (e) {
     console.error(e);
@@ -16,12 +19,17 @@ export const GET = async (req: Request, { params }: { params: any }) => {
 export const PATCH = async (req: Request, { params }: { params: any }) => {
   const { prompt, tag } = await req.json();
   try {
-    await connectToDatabase();
-    const Currprompt = await Prompt.findById(params.id);
+    const prismaClient = retrievePrismaClient();
+    const Currprompt = await prismaClient.prompt.update({
+      where: {
+        id: params.id,
+      },
+      data: {
+        prompt: prompt,
+        tag: tag,
+      },
+    });
     if (!Currprompt) return new Response("Prompt not found", { status: 404 });
-    Currprompt.prompt = prompt;
-    Currprompt.tag = tag;
-    await Currprompt.save();
     return new Response(JSON.stringify(Currprompt), { status: 200 });
   } catch (e) {
     console.error(e);
@@ -31,8 +39,12 @@ export const PATCH = async (req: Request, { params }: { params: any }) => {
 
 export const DELETE = async (req: Request, { params }: { params: any }) => {
   try {
-    await connectToDatabase();
-    await Prompt.findByIdAndDelete(params.id);
+    const prismaClient = retrievePrismaClient();
+    await prismaClient.prompt.delete({
+      where: {
+        id: params.id,
+      },
+    });
     return new Response("Prompt Deleted successfully", { status: 200 });
   } catch (e) {
     console.error(e);

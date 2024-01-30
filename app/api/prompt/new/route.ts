@@ -1,15 +1,16 @@
-import { connectToDatabase } from "@utils/database";
-import Prompt from "@models/prompt";
+import { retrievePrismaClient } from "@utils/PrismaClient";
 export const POST = async (req: Request) => {
   const { userId, prompt, tag } = await req.json();
 
   try {
-    await connectToDatabase();
-    const newPrompt = await new Prompt({
-      creator: userId,
-      prompt,
-      tag,
-    }).save();
+    const prismaClient = retrievePrismaClient();
+    const newPrompt = await prismaClient.prompt.create({
+      data: {
+        creatorId: userId,
+        prompt: prompt,
+        tag: tag,
+      },
+    });
     return new Response(JSON.stringify(newPrompt), { status: 201 });
   } catch (e) {
     console.error(e);

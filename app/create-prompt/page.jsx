@@ -16,6 +16,14 @@ const CreatePrompt = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
+      console.log(
+        JSON.stringify({
+          prompt: post.prompt,
+          userId: session?.user?.id,
+          tag: post.tag,
+        }),
+        session,
+      );
       const response = await fetch("/api/prompt/new", {
         method: "POST",
         body: JSON.stringify({

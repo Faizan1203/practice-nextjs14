@@ -1,8 +1,6 @@
 import Google from "next-auth/providers/google";
-import { connectToDatabase } from "@utils/database";
-import User from "@models/user";
 import NextAuth from "next-auth/next";
-
+import { retrievePrismaClient } from "@utils/PrismaClient";
 const handler = NextAuth({
   providers: [
     Google({
@@ -12,25 +10,36 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-
-      const sessionUser = await User.findOne({ email: session.user.email });
-      session.user.id = sessionUser?._id?.toString();
+      const prisma = retrievePrismaClient();
+      const sessionUser = await prisma.user.findFirst({
+        where: {
+          email: session.user.email,
+        },
+      });
+      session.user.id = sessionUser?.id?.toString();
       return session;
     },
     async signIn({ profile }) {
       try {
-        await connectToDatabase();
-        const userExists = await User.findOne({ email: profile.email });
-        if (!userExists) {
-          await User.create({
+        const prisma = retrievePrismaClient();
+        const userExists = await prisma.user.findFirst({
+          where: {
             email: profile.email,
-            username: profile.name.replaceAll(" ", "").toLowerCase(),
-            image: profile.picture,
+          },
+        });
+
+        if (!userExists) {
+          await prisma.user.create({
+            data: {
+              email: profile.email,
+              username: profile.name.replaceAll(" ", "").toLowerCase(),
+              image: profile.picture,
+            },
           });
         }
         return true;
-      }catch (error) {
-        console.log(error);
+      } catch (error) {
+        console.log(error.message.toString());
         return false;
       }
     },
