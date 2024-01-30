@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "vercel": "vercel",
-    "format": "prettier --write \"./**/*.{js,jsx,mjs,ts,tsx}\""
+    "format": "prettier --write \"./**/*.{js,jsx,mjs,ts,tsx}\"",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.8.1",
