@@ -1,9 +1,7 @@
-import { retrievePrismaClient } from "@utils/PrismaClient";
-
+import prisma from "@utils/PrismaClient";
 export const GET = async (req: Request, { params }: { params: any }) => {
   try {
-    const prismaClient = retrievePrismaClient();
-    const prompts = prismaClient.prompt.findMany({
+    const prompts = await prisma.prompt.findMany({
       where: {
         creatorId: params.id,
       },
@@ -19,8 +17,7 @@ export const GET = async (req: Request, { params }: { params: any }) => {
 export const PATCH = async (req: Request, { params }: { params: any }) => {
   const { prompt, tag } = await req.json();
   try {
-    const prismaClient = retrievePrismaClient();
-    const Currprompt = await prismaClient.prompt.update({
+    const Currprompt = await prisma.prompt.update({
       where: {
         id: params.id,
       },
@@ -39,8 +36,7 @@ export const PATCH = async (req: Request, { params }: { params: any }) => {
 
 export const DELETE = async (req: Request, { params }: { params: any }) => {
   try {
-    const prismaClient = retrievePrismaClient();
-    await prismaClient.prompt.delete({
+    await prisma.prompt.delete({
       where: {
         id: params.id,
       },

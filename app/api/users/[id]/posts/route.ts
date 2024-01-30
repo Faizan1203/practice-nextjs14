@@ -1,9 +1,7 @@
-import { retrievePrismaClient } from "@utils/PrismaClient";
-
+import prisma from "@utils/PrismaClient";
 export const GET = async (req: Request, { params }: { params: any }) => {
   try {
-    const prismaClient = retrievePrismaClient();
-    const prompts = await prismaClient.prompt.findMany({
+    const prompts = await prisma.prompt.findMany({
       where: {
         creatorId: params.id,
       },

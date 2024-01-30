@@ -1,10 +1,9 @@
-import { retrievePrismaClient } from "@utils/PrismaClient";
+import prisma from "@utils/PrismaClient";
 export const POST = async (req: Request) => {
   const { userId, prompt, tag } = await req.json();
 
   try {
-    const prismaClient = retrievePrismaClient();
-    const newPrompt = await prismaClient.prompt.create({
+    const newPrompt = await prisma.prompt.create({
       data: {
         creatorId: userId,
         prompt: prompt,

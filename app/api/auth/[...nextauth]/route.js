@@ -1,6 +1,6 @@
 import Google from "next-auth/providers/google";
 import NextAuth from "next-auth/next";
-import { retrievePrismaClient } from "@utils/PrismaClient";
+import prisma from "@utils/PrismaClient";
 const handler = NextAuth({
   providers: [
     Google({
@@ -10,7 +10,6 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      const prisma = retrievePrismaClient();
       const sessionUser = await prisma.user.findFirst({
         where: {
           email: session.user.email,
@@ -21,7 +20,6 @@ const handler = NextAuth({
     },
     async signIn({ profile }) {
       try {
-        const prisma = retrievePrismaClient();
         const userExists = await prisma.user.findFirst({
           where: {
             email: profile.email,
