@@ -1,5 +1,6 @@
 import { retrievePrismaClient } from "@utils/PrismaClient";
 import { revalidatePath } from "next/cache";
+export const dynamic = "force-dynamic";
 export const GET = async (req: Request) => {
   try {
     revalidatePath("/");
