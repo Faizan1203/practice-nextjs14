@@ -7,15 +7,16 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import { Provider } from "next-auth/providers/index";
 const Nav = () => {
   const { data: session } = useSession();
 
-  const [providers, setProviders] = useState<any>(null);
+  const [providers, setProviders] = useState<Provider[] | null>([]);
   const [toggleDropdown, setToggleDropdown] = useState(false);
   useEffect(() => {
     const retrieveAndSetProviders = async () => {
       const response = await getProviders();
-      setProviders(response);
+      setProviders(response as Provider[] | null);
     };
     retrieveAndSetProviders();
   }, []);
@@ -80,25 +81,22 @@ const Nav = () => {
                 <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
                   <div className="px-1 py-1 ">
                     {providers &&
-                      Object.values(providers).map((provider) => (
-                        <Menu.Item key={(provider as any).name}>
+                      Object.values(providers).map((provider: Provider) => (
+                        <Menu.Item key={provider.name}>
                           {({ active }) => (
                             <div>
                               <button
+                                onClick={() => signIn(provider.id)}
                                 className={`${
                                   active
                                     ? "bg-black text-white"
                                     : "text-gray-900"
                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                               >
-                                {(provider as any).name === "Google" && (
-                                  <GoogleIcon />
-                                )}
-                                {(provider as any).name === "GitHub" && (
-                                  <GitHubIcon />
-                                )}
+                                {provider.name === "Google" && <GoogleIcon />}
+                                {provider.name === "GitHub" && <GitHubIcon />}
                                 <p className="px-2">
-                                  Sign in with {(provider as any).name}
+                                  Sign in with {provider.name}
                                 </p>
                               </button>
                             </div>
@@ -158,11 +156,11 @@ const Nav = () => {
         ) : (
           <>
             {providers &&
-              Object.values(providers).map((provider) => (
+              Object.values(providers).map((provider: Provider) => (
                 <button
                   type="button"
-                  key={(provider as any).name}
-                  onClick={() => signIn((provider as any).id)}
+                  key={provider.name}
+                  onClick={() => signIn(provider.id)}
                   className="black_btn"
                 >
                   Sign In
