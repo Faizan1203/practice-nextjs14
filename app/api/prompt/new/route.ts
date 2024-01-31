@@ -1,7 +1,6 @@
 import prisma from "@utils/PrismaClient";
 export const POST = async (req: Request) => {
   const { userId, prompt, tag } = await req.json();
-
   try {
     const newPrompt = await prisma.prompt.create({
       data: {

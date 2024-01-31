@@ -1,43 +1,44 @@
 import Google from "next-auth/providers/google";
 import NextAuth from "next-auth/next";
 import prisma from "@utils/PrismaClient";
+import { Session, User } from "next-auth";
+
 const handler = NextAuth({
   providers: [
     Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env?.GOOGLE_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
     }),
   ],
   callbacks: {
-    async session({ session }) {
+    async session({ session }: { session: Session }) {
       const sessionUser = await prisma.user.findFirst({
         where: {
-          email: session.user.email,
+          email: session.user.email ?? "",
         },
       });
-      session.user.id = sessionUser?.id?.toString();
+      session.user.id = sessionUser?.id?.toString() ?? "";
       return session;
     },
-    async signIn({ profile }) {
+    async signIn({ user }: { user: User }) {
       try {
         const userExists = await prisma.user.findFirst({
           where: {
-            email: profile.email,
+            email: user.email ?? "",
           },
         });
-
         if (!userExists) {
           await prisma.user.create({
             data: {
-              email: profile.email,
-              username: profile.name.replaceAll(" ", "").toLowerCase(),
-              image: profile.picture,
+              email: user.email ?? "",
+              username: (user.name ?? "").replaceAll(" ", "").toLowerCase(),
+              image: user.image ?? "",
             },
           });
         }
         return true;
       } catch (error) {
-        console.log(error.message.toString());
+        console.log(error);
         return false;
       }
     },

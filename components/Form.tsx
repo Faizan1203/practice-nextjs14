@@ -1,18 +1,8 @@
+import { FormProps } from "@app/types/types";
 import Link from "next/link";
 
-const Form = ({
-  type,
-  post,
-  setPost,
-  submitting,
-  handleSubmit,
-}: {
-  type: any;
-  post: any;
-  setPost: any;
-  submitting: any;
-  handleSubmit: any;
-}) => {
+const Form = (formProps: FormProps) => {
+  let { type, postTagAndData, setPost, submitting, handleSubmit } = formProps;
   return (
     <section className=" flex-col w-full max-w-full flex-start">
       <h1 className="head_text text-left">
@@ -23,7 +13,9 @@ const Form = ({
         run wild with any AI-powered platform.
       </p>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={(e) => {
+          handleSubmit(e);
+        }}
         className="mt-10 w-full max-w-2xl flex flex-col gap-7 glassmorphism"
       >
         <label>
@@ -31,8 +23,10 @@ const Form = ({
             Your AI prompt
           </span>
           <textarea
-            value={post.prompt}
-            onChange={(e) => setPost({ ...post, prompt: e.target.value })}
+            value={postTagAndData.data}
+            onChange={(e) =>
+              setPost({ ...postTagAndData, data: e.target.value })
+            }
             placeholder="Write your prompt here..."
             required
             className="form_textarea"
@@ -43,8 +37,10 @@ const Form = ({
             Tag <span className="font-normal">(#product, #webdev)</span>
           </span>
           <input
-            value={post.tag}
-            onChange={(e) => setPost({ ...post, tag: e.target.value })}
+            value={postTagAndData.tag}
+            onChange={(e) =>
+              setPost({ ...postTagAndData, tag: e.target.value })
+            }
             placeholder="#tag"
             required
             className="form_input"

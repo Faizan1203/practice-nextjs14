@@ -3,10 +3,9 @@ export const GET = async (req: Request, { params }: { params: any }) => {
   try {
     const prompts = await prisma.prompt.findMany({
       where: {
-        creatorId: params.id,
+        id: params.id,
       },
     });
-    if (!prompts) return new Response("Prompts not found", { status: 404 });
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (e) {
     console.error(e);
@@ -15,14 +14,14 @@ export const GET = async (req: Request, { params }: { params: any }) => {
 };
 
 export const PATCH = async (req: Request, { params }: { params: any }) => {
-  const { prompt, tag } = await req.json();
+  const { data, tag } = await req.json();
   try {
     const Currprompt = await prisma.prompt.update({
       where: {
         id: params.id,
       },
       data: {
-        prompt: prompt,
+        prompt: data,
         tag: tag,
       },
     });

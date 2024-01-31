@@ -1,16 +1,6 @@
 import React from "react";
 import PromptCard from "./PromptCard";
-
-interface ProfileProps {
-  name: string;
-  desc: string;
-  data: [];
-  handleEdit: Function;
-  handleDelete: Function;
-}
-interface Post {
-  id: string;
-}
+import { PostData, ProfileProps } from "@app/types/types";
 
 const Profile = (profileProps: ProfileProps) => {
   return (
@@ -20,7 +10,7 @@ const Profile = (profileProps: ProfileProps) => {
       </h1>
       <p className="desc text-left">{profileProps.desc}</p>
       <div className="mt-16 prompt_layout">
-        {profileProps.data.map((post: Post) => (
+        {profileProps.data.map((post: PostData) => (
           <PromptCard
             key={post.id}
             post={post}

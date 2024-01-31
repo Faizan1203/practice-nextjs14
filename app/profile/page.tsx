@@ -1,19 +1,21 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Profile from "@components/Profile";
 import { useRouter } from "next/navigation";
+import { PostData } from "@app/types/types";
+import { Prompt } from "@prisma/client";
 
 const ProfilePage = () => {
   const router = useRouter();
 
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const { data: session } = useSession();
-  const handleEdit = (post) => {
+  const handleEdit = (post: Prompt) => {
     router.push(`update-prompt?id=${post.id}`);
   };
-  const handleDelete = async (post) => {
+  const handleDelete = async (post: Prompt) => {
     const hasConfirmed = confirm(
       "Are you sure you want to delete this prompt?",
     );
@@ -27,7 +29,9 @@ const ProfilePage = () => {
             tag: post.tag,
           }),
         });
-        const filteredPosts = posts.filter((p) => p.id !== post.id);
+
+        const filteredPosts = posts?.filter((p) => p.id !== post.id);
+
         setPosts(filteredPosts);
       } catch (error) {
         console.error(error);

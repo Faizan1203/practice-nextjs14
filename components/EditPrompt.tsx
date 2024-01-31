@@ -2,13 +2,14 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Form from "@components/Form";
+import { PostTagAndData } from "@app/types/types";
 
 const HandleEdit = () => {
   const promptId = useSearchParams().get("id");
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
-  const [post, setPost] = useState({
-    prompt: "",
+  let [post, setPost] = useState<PostTagAndData>({
+    data: "",
     tag: "",
   });
 
@@ -17,8 +18,8 @@ const HandleEdit = () => {
       const res = await fetch(`/api/prompt/${promptId}`);
       const data = await res.json();
       setPost({
-        prompt: data.prompt,
-        tag: data.tag,
+        data: data[0].prompt, // TODO: RENAME PROMPT TO DATA IN DATABASE
+        tag: data[0].tag,
       });
     };
     if (promptId) {
@@ -35,9 +36,9 @@ const HandleEdit = () => {
       const response = await fetch(`/api/prompt/${promptId}`, {
         method: "PATCH",
         body: JSON.stringify({
-          prompt: post.prompt,
+          data: post.data,
           tag: post.tag,
-        }),
+        } as PostTagAndData),
       });
       if (response.ok) {
         router.push("/");
@@ -49,16 +50,9 @@ const HandleEdit = () => {
     }
   };
   return (
-    // <EditPrompt
-    //   post={post}
-    //   setPost={setPost}
-    //   submitting={submitting}
-    //   updatePrompt={updatePrompt}
-    // />
-
     <Form
       type="Edit"
-      post={post}
+      postTagAndData={post}
       setPost={setPost}
       submitting={submitting}
       handleSubmit={updatePrompt}
