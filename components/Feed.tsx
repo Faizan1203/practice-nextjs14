@@ -22,7 +22,7 @@ const PromptCardList = (promptCardListProps: PromptCardListProps) => {
   );
 };
 const Feed = () => {
-  const [searchText, setSearchText] = useState("");
+  // const [searchText, setSearchText] = useState("");
   const [posts, setPosts] = useState<PostData[]>([]); // Provide an empty array as the initial value
   const handleSearchChange = () => {};
   const handleTagClick = () => {};
@@ -33,7 +33,7 @@ const Feed = () => {
       const data: PostData[] = await res.json();
       setPosts(data);
     };
-    fetchPosts();
+    fetchPosts().then((r) => r);
   }, []);
   return (
     <section className="feed">
@@ -41,7 +41,7 @@ const Feed = () => {
         <input
           type="text"
           placeholder="Search for a tag or a username"
-          value={searchText}
+          value={""}
           onChange={() => handleSearchChange()}
           required
           className="search_input peer"
