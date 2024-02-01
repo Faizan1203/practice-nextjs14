@@ -33,7 +33,7 @@ const Feed = () => {
       const data: PostData[] = await res.json();
       setPosts(data);
     };
-    fetchPosts();
+    fetchPosts().then((r) => r);
   }, []);
   return (
     <section className="feed">
