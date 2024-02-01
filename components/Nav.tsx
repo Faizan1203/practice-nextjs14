@@ -3,7 +3,7 @@ import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -35,8 +35,7 @@ const Nav = () => {
       <div className="sm:flex hidden">
         {session?.user ? (
           <div className="flex gap-3 md:gap-5">
-            <Link href="/create-prompt" className="black_btn">
-              {" "}
+            <Link href={"/create-prompt"} className="black_btn">
               Create Post
             </Link>
             <button
