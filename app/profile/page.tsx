@@ -48,7 +48,7 @@ const ProfilePage = () => {
   }, [session?.user.id]);
   return (
     <Profile
-      name={"My"}
+      name={""}
       desc="Welcome to your personalized profile page"
       data={posts}
       handleEdit={handleEdit}
