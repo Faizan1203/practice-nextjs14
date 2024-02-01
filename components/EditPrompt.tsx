@@ -23,7 +23,7 @@ const HandleEdit = () => {
       });
     };
     if (promptId) {
-      getPromptDetails().then((r) => r);
+      getPromptDetails();
     }
   }, [promptId]);
   const updatePrompt = async (e: Event) => {

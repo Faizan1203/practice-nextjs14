@@ -6,19 +6,21 @@ import Profile from "@components/Profile";
 import { useRouter } from "next/navigation";
 import { PostData } from "@app/types/types";
 import { Prompt } from "@prisma/client";
-import ConfirmationModal from "@components/ConfirmationModal";
 
 const ProfilePage = () => {
   const router = useRouter();
-  let [isAccept, setIsAccept] = useState(false);
+
   const [posts, setPosts] = useState<PostData[]>([]);
   const { data: session } = useSession();
   const handleEdit = (post: Prompt) => {
     router.push(`update-prompt?id=${post.id}`);
   };
   const handleDelete = async (post: Prompt) => {
-    ConfirmationModal({ setIsAccept });
-    if (isAccept) {
+    const hasConfirmed = confirm(
+      "Are you sure you want to delete this prompt?",
+    );
+
+    if (hasConfirmed) {
       try {
         await fetch(`/api/prompt/${post.id.toString()}`, {
           method: "DELETE",
@@ -43,7 +45,7 @@ const ProfilePage = () => {
       setPosts(data);
     };
     if (session?.user.id) {
-      fetchPosts().then((r) => r);
+      fetchPosts();
     }
   }, [session?.user.id]);
   return (

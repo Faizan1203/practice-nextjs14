@@ -8,10 +8,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { Provider } from "next-auth/providers/index";
-import { useRouter } from "@node_modules/next/navigation";
 const Nav = () => {
-  const router = useRouter();
-
   const { data: session } = useSession();
 
   const [providers, setProviders] = useState<Provider[] | null>([]);
@@ -21,7 +18,7 @@ const Nav = () => {
       const response = await getProviders();
       setProviders(response as Provider[] | null);
     };
-    retrieveAndSetProviders().then((r) => r);
+    retrieveAndSetProviders();
   }, []);
   return (
     <nav className="flex-between w-full mb-16 pt-3">
@@ -43,10 +40,7 @@ const Nav = () => {
             </Link>
             <button
               type="button"
-              onClick={() => {
-                signOut();
-                router.push("/");
-              }}
+              onClick={() => signOut()}
               className="outline_btn"
             >
               Sign Out
@@ -150,7 +144,6 @@ const Nav = () => {
                   onClick={() => {
                     setToggleDropdown(false);
                     signOut();
-                    router.push("/");
                   }}
                   className="mt-5 w-full black_btn"
                 >
